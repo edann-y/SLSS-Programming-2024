@@ -59,6 +59,56 @@ def main():
     elif dice == dicer:
         print("Looks like we tied.")    
 
+def main2():
+    roll = input("Please type 'roll' to roll the dice.\n").strip("?.,!").lower()
+
+    while True:
+        if "roll" in roll:
+            print("Rolling...")
+            break
+        else:
+            print("...")
+            time.sleep(0.5)
+            roll = input("Please type 'roll' to roll the dice.\n").strip("?.,!").lower()
+
+    time.sleep(2)
+
+    dice = random.randint(1,6)
+
+    print(dice)
+
+    time.sleep(1)
+
+    print("Now it's my turn!")
+
+    time.sleep(1.5)
+
+    dicer = random.randint(1,6)
+
+    print(dicer)
+
+    if dice > dicer:
+        print("Looks like I lost!")
+    elif dice < dicer:
+        print("I won! Yay!")
+    elif dice == dicer:
+        print("Looks like we tied.")    
+
+    print("Would you like to play again?")
+
+    again = input("Input 'Yes or No'.\n").strip("?.,!").lower()
+
+    while True:
+        if again == "yes":
+            main2()
+        elif again == "no":
+            print("Ok! I had fun. See you next time!")
+            break
+        else: 
+            print("...")
+            time.sleep(0.5)
+            again = input("Input 'Yes or No'.\n").strip("?.,!").lower()
+
 main()
 
 time.sleep(2)
