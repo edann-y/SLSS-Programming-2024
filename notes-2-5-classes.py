@@ -43,6 +43,12 @@ class Pokemon: # Use a capital letter for class name
             return f"{self.name} consumed the potion and feels healthier!"
         else:
             return f"{self.name} batted the {food} away."
+        
+        
+class Wooper(Pokemon):
+    def __init__(self):
+        # Call constructor of Parent class
+        super().__init__()
 
         
 
