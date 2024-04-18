@@ -46,11 +46,76 @@ class Pokemon: # Use a capital letter for class name
         
         
 class Wooper(Pokemon):
-    def __init__(self):
+    def __init__(self, name="Wooper"):
         # Call constructor of Parent class
         super().__init__()
 
+        # Assigning the default values to property
+        self.name = name
+        self.id = 194
+        self.weight = 8.5
+        self.height = 0.4
+        self.type = ["Water", "Ground"]
+        self.actual_cry = "*Squeal*"
+
+    def hydro_pump(self, defender: Pokemon) -> str:
+        """Simulate a hydro pump attack against another pokemon"""
+
+        # Params:
+        # - Defender = Defending Pokemon
+
+        # Returns:
+        #   Str representing the result of the attack
+
+        response = f"{self.name} used Hydro Pump on {defender.name}!\n"
+
+        is_weak = False
+
+        if type(defender.type) == list:
+            for t in defender.type:
+                if t in ["water", "grass", "dragon"]:
+                    is_weak = True
+                    break
+        elif type(defender.type) == str:
+            if defender.type in ["water", "grass", "dragon"]:
+                is_weak = True
         
+        if is_weak:
+            time.sleep(1)
+            response = response + "It was not very effective."
+
+        return response
+        
+
+class Psyduck(Pokemon):
+    def __init__(self, name="Psyduck"):
+        # Call constructor of Parent class
+        super().__init__()
+
+        # Assigning the default values to property
+        self.name = name
+        self.id = 54
+        self.weight = 19.6
+        self.height = 0.8
+        self.type = "Water"
+        self.actual_cry = "Quack-wack"
+
+    def confusion(self, defender: Pokemon) -> str:
+        """Simulate a hydro pump attack against another pokemon"""
+
+        # Params:
+        # - Defender = Defending Pokemon
+
+        # Returns:
+        #   Str representing the result of the attack
+
+        response = f"{self.name} used confusion on {defender.name}!\n"
+        
+        if defender.type.lower() in ["psychic", "steel"]:
+            time.sleep(1)
+            response = response + "It was not very effective."  
+
+        return response
 
 
 # Create two Pokemon using our class
@@ -101,3 +166,6 @@ time.sleep(0.8)
 print(pokemon_one.eat("potion"))
 time.sleep(0.8)
 print(pokemon_one.eat("chilan berry"))
+time.sleep(1)
+
+print(pokemon_one)
