@@ -69,20 +69,31 @@ class Wooper(Pokemon):
 
         response = f"{self.name} used Hydro Pump on {defender.name}!\n"
 
+        is_resistant = False
+
         is_weak = False
 
         if type(defender.type) == list:
             for t in defender.type:
-                if t in ["water", "grass", "dragon"]:
-                    is_weak = True
+                if t.lower() in ["water", "grass", "dragon"]:
+                    is_resistant = True
+                    break
+                if t.lower() in ["fire", "ground", "rock"]:
+                    is_resistant = True
                     break
         elif type(defender.type) == str:
-            if defender.type in ["water", "grass", "dragon"]:
+            if defender.type.lower() in ["water", "grass", "dragon"]:
+                is_resistant = True
+            if defender.type.lower() in ["fire", "ground", "rock"]:
                 is_weak = True
         
-        if is_weak:
+        if is_resistant:
             time.sleep(1)
             response = response + "It was not very effective."
+
+        if is_weak:
+            time.sleep(1)
+            response = response + "It was super effective!"
 
         return response
         
@@ -116,8 +127,62 @@ class Psyduck(Pokemon):
             response = response + "It was not very effective."  
 
         return response
+    
+class Stunfisk(Pokemon):
+    def __init__(self, name="Stunfisk"):
 
+        super().__init__()
 
+        self.name = name
+        self.id = 618
+        self.weight = 11
+        self.height = 0.7
+        self.type = ["Electric", "Ground"]
+        self.actual_cry = "Bzzzt"
+
+    def electroweb(self, defender: Pokemon) -> str:
+
+        response = f"{self.name} used Electroweb on {defender.name}!\n"
+
+        is_resistant = False
+
+        is_weak = False
+
+        is_immune = False
+
+        if type(defender.type) == list:
+            for t in defender.type:
+                if t.lower() in ["electric", "grass", "dragon"]:
+                    is_resistant = True
+                    break
+                elif t.lower() in ["water", "flying"]:
+                    is_weak = True
+                    break
+                elif t.lower() == "ground":
+                    is_immune = True
+
+        elif type(defender.type) == str:
+            if defender.type.lower() in ["electric", "grass", "dragon"]:
+                is_resistant = True
+            if defender.type.lower() in ["water", "flying"]:
+                is_weak = True     
+            elif t.lower() == "ground":
+                is_immune = True   
+
+        if is_resistant:
+            time.sleep(1)
+            response = response + "It was not very effective."
+
+        if is_weak:
+            time.sleep(1)
+            response = response + "It was super effective!"
+
+        if is_immune:
+            time.sleep(1)
+            response = response + f"It doesn't affect {defender}"
+
+        return response
+    
 # Create two Pokemon using our class
 
 # Make Wooper and Psyduck
@@ -168,4 +233,13 @@ time.sleep(0.8)
 print(pokemon_one.eat("chilan berry"))
 time.sleep(1)
 
-print(pokemon_one)
+wooper_one = Wooper()
+wooper_two = Wooper("Jolly")
+psyduck_one = Psyduck()
+psyduck_two = Psyduck("Naive")
+stunfisk_one = Stunfisk()
+stunfisk_two = Stunfisk("Modest")
+
+print(wooper_one.hydro_pump(pokemon_two))
+print(stunfisk_one.electroweb(pokemon_two))
+print(wooper_one.hydro_pump(stunfisk_one))
