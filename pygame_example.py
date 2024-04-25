@@ -15,6 +15,36 @@ class Monke(pygame.sprite.Sprite):
         # Sets x and y to 0, width and height to image
         self.rect = self.image.get_rect()
 
+        self.vel_x = 3
+        self.vel_y = 3
+
+
+    def update(self):
+        # Update the location of the DVD logo
+        self.rect.x += self.vel_x
+        self.rect.y += self.vel_y
+
+        # Bounce if reaches bottom
+        # if the bottom of the sprite is past the bottom of screen
+        # convert to negative (*-1)
+        if self.rect.bottom > 720:
+            self.vel_y *= -1
+        
+        # Top
+        if self.rect.top < 0:
+            self.vel_y *= -1
+
+        # Left
+
+        if self.rect.left < 0:
+            self.vel_x *= -1
+
+        # Right
+        if self.rect.right > 1280:
+            self.vel_x *= -   1
+
+
+
 
 
 def start():
@@ -46,6 +76,10 @@ def start():
     # Make a monke logo object 
     monkey = Monke()
 
+    # Monkey Position
+    monkey.rect.centerx = WIDTH // 2
+    monkey.rect.centery = HEIGHT // 2
+
     # Move the Monkey to the middle 
     monkey.rect
 
@@ -63,6 +97,8 @@ def start():
                 done = True
 
         # --- Update the world state
+        all_sprites.update()
+        
 
         # --- Draw items
         screen.fill(BLACK)
