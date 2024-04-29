@@ -28,7 +28,7 @@ class Snowflake(pg.sprite.Sprite):
 
         # Spawn in a random location in the view
         self.rect.x = random.randrange(0, WIDTH - self.rect.width)
-        self.rect.y = 720
+        self.rect.y = 0
 
         self.vel_x = 0
         self.vel_y = random.choice([3, 4, 5, 6, 7, 8])
@@ -50,14 +50,14 @@ def start():
 
     pg.display.set_caption("Snowflake Practice by Edan")
 
-    snowy = Snowflake
+    snowy = Snowflake(5)
 
 
     # All sprites go in this sprite Group
     all_sprites = pg.sprite.Group()
 
     # Add one snowflake to the sprite group
-    all_sprites.add(snowy(15))
+    all_sprites.add(snowy)
 
     # --Main Loop--
     while not done:
@@ -72,6 +72,8 @@ def start():
 
         # --- Draw items
         screen.fill(BLACK)
+
+        all_sprites.draw()
 
         # Update the screen with anything new
         pg.display.flip()
