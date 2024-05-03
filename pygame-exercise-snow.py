@@ -56,6 +56,11 @@ def start():
     # All sprites go in this sprite Group
     all_sprites = pg.sprite.Group()
 
+
+    # Create more snow
+    for _ in range(20):
+        all_sprites.add(Snowflake(5))
+
     # Add one snowflake to the sprite group
     all_sprites.add(snowy)
 
@@ -73,7 +78,7 @@ def start():
         # --- Draw items
         screen.fill(BLACK)
 
-        all_sprites.draw()
+        all_sprites.draw(screen)
 
         # Update the screen with anything new
         pg.display.flip()
