@@ -9,11 +9,11 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 YELLOW = (255, 255, 0)
 SKY_BLUE = (95, 165, 228)
-WIDTH = 1920
-HEIGHT = 1080
-TITLE = "Jewel Thief"
 
-NUM_BANANA = 1
+WIDTH = 1280  # Pixels
+HEIGHT = 720
+SCREEN_SIZE = (WIDTH, HEIGHT)
+NUM_BANANA = 5
 
 
 class Player(pg.sprite.Sprite):
@@ -33,38 +33,93 @@ class Banana(pg.sprite.Sprite):
 
         self.image = pg.image.load("./Images/banana.png")
         self.rect = self.image.get_rect()
-
-    def update(self):
         self.rect.x = random.randrange(0, WIDTH - self.rect.width)
         self.rect.y = random.randrange(0, HEIGHT - self.rect.height)
 
-def main():
+class Gorilla(pg.sprite.Sprite):
+    """Represents DVD logo sprite"""
+
+    def __init__(self):
+        super().__init__()
+        # image - Visual Representation
+        self.image = pg.image.load("./Images/gorilla.png")
+
+        # rect - Hitbox Representation
+        # get_rect() -> Rect
+        # Sets x and y to 0, width and height to image
+        self.rect = self.image.get_rect()
+
+                # Spawn in a random location in the view
+        self.rect.x = 0
+        self.rect.y = random.randrange(0, HEIGHT - self.rect.height)
+
+        self.vel_x = random.choice([-6, -5, -4, -3, 3, 4, 5, 6])
+        self.vel_y = random.choice([-6, -5, -4, -3, 3, 4, 5, 6])
+
+
+    def update(self):
+        # Update the location of the DVD logo
+        self.rect.x += self.vel_x
+        self.rect.y += self.vel_y
+
+        # Bounce if reaches bottom
+        # if the bottom of the sprite is past the bottom of screen
+        # convert to negative (*-1)
+        if self.rect.bottom > HEIGHT:
+            self.vel_y *= -1
+        
+        # Top
+        if self.rect.top < 0:
+            self.vel_y *= -1
+
+        # Left
+
+        if self.rect.left < 0:
+            self.vel_x *= -1
+
+        # Right
+        if self.rect.right > WIDTH:
+            self.vel_x *= -   1
+
+def start():
     pg.init()
+    pg.mouse.set_visible(False)
 
     # ----- SCREEN PROPERTIES
-    size = (WIDTH, HEIGHT)
-    screen = pg.display.set_mode(size)
-    pg.display.set_caption(TITLE)
-
-    # ----- LOCAL VARIABLES
+    screen = pg.display.set_mode(SCREEN_SIZE)
     done = False
     clock = pg.time.Clock()
 
+    score = 0
+
+    life = 5
+
     player = Player()
-    bananas = Banana
+
+    gorilla = Gorilla()
 
     # Create a group of sprites
     all_sprites = pg.sprite.Group()
 
     banana_sprites = pg.sprite.Group()
 
-    # Add the DVD Logo object to the group of sprites
-    all_sprites.add(player)
-    all_sprites.add(bananas)
-    banana_sprites.add(bananas)
+    gorilla_sprite = pg.sprite.Group()
 
+    player_sprite = pg.sprite.Group()
+
+    player_sprite.add(player)
+
+    all_sprites.add(gorilla)
+
+    # Add the DVD Logo object to the group of sprites
     for _ in range(NUM_BANANA):
         bananas = Banana()
+        all_sprites.add(bananas)
+        banana_sprites.add(bananas)
+
+    all_sprites.add(player)
+
+    pg.display.set_caption("Monkey Game")
 
     # --MAIN LOOP--
     while not done:
@@ -78,10 +133,26 @@ def main():
         all_sprites.update()
 
         # Collsion System
-        bananacollision = pg.sprite.spritecollide(player, banana_sprites, False)
+        bananacollision = pg.sprite.spritecollide(player, banana_sprites, True)
+
+        gorillacollision = pg.sprite.spritecollide(gorilla, player_sprite, True)
 
         for bananas in bananacollision:
-            print(f"Monke ate Banana at {bananas.rect.x}, {bananas.rect.y}")
+            score += 1
+
+            print(f"Hunger: {score}")
+
+        # if no more banana (no good :c), respawn for monke
+        if len(banana_sprites) <= 0:
+            for _ in range(NUM_BANANA):
+                bananas = Banana()
+                all_sprites.add(bananas)
+                banana_sprites.add(bananas)
+
+        for gorilla in gorillacollision:
+            life -= 1
+
+            print(f"Lives: {life}")
 
         screen.fill(BLACK)
         all_sprites.draw(screen)
@@ -93,9 +164,8 @@ def main():
     pg.quit()
 
 
-def random_coords():
-    x, y = (random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
-    return x, y
+def main():
+    start()
 
 
 if __name__ == "__main__":
