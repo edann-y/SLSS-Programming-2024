@@ -44,9 +44,6 @@ class Gorilla(pg.sprite.Sprite):
         # image - Visual Representation
         self.image = pg.image.load("./Images/gorilla.png")
 
-        # rect - Hitbox Representation
-        # get_rect() -> Rect
-        # Sets x and y to 0, width and height to image
         self.rect = self.image.get_rect()
 
                 # Spawn in a random location in the view
@@ -94,6 +91,8 @@ def start():
 
     life = 5
 
+    font = pg.font.SysFont("Futura", 24)
+
     player = Player()
 
     gorilla = Gorilla()
@@ -103,11 +102,9 @@ def start():
 
     banana_sprites = pg.sprite.Group()
 
-    gorilla_sprite = pg.sprite.Group()
+    enemy_sprite = pg.sprite.Group()
 
-    player_sprite = pg.sprite.Group()
-
-    player_sprite.add(player)
+    enemy_sprite.add(gorilla)
 
     all_sprites.add(gorilla)
 
@@ -135,7 +132,7 @@ def start():
         # Collsion System
         bananacollision = pg.sprite.spritecollide(player, banana_sprites, True)
 
-        gorillacollision = pg.sprite.spritecollide(gorilla, player_sprite, True)
+        gorillacollision = pg.sprite.spritecollide(player, enemy_sprite, False)
 
         for bananas in bananacollision:
             score += 1
@@ -150,16 +147,23 @@ def start():
                 banana_sprites.add(bananas)
 
         for gorilla in gorillacollision:
-            life -= 1
-
-            print(f"Lives: {life}")
+            life -= (1 / 60)
 
         screen.fill(BLACK)
         all_sprites.draw(screen)
 
+        score_image = font.render(f"Score: {score}",  True, SKY_BLUE)
+        screen.blit(score_image, (5, 5))
+
+        lives_image = font.render(f"Lives Remaining: {int(life)}",  True, SKY_BLUE)
+        screen.blit(lives_image, (5, 35))
+
         # ----- UPDATE DISPLAY
         pg.display.flip()
         clock.tick(60)
+
+        if life <= 0:
+            pg.quit()
 
     pg.quit()
 

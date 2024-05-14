@@ -79,10 +79,5 @@ def main():
     pg.quit()
 
 
-def random_coords():
-    x, y = (random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
-    return x, y
-
-
 if __name__ == "__main__":
     main()
