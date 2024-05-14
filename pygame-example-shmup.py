@@ -1,6 +1,7 @@
 # Shmup
 # Edan was Here :)
 
+import random as ran
 import pygame as pg
 
 # --CONSTANTS--
@@ -19,7 +20,7 @@ HEIGHT = 1400
 SCREEN_SIZE = (WIDTH, HEIGHT)
 TITLE = "Shoot Em' Up"
 
-# Make Player Class to move only x
+# Make Player Class to move only x + Bullets
 class Player(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -42,11 +43,24 @@ class Bullet(pg.sprite.Sprite):
 
         self.rect.centerx = player_loc[0]
         self.rect.bottom = player_loc[1]
+
+        self.vel_y = -7
+
+    def update(self):
+        self.rect.y += self.vel_y
         
 
-
-# Make Bullets 
 # Make Enemies
+
+class Enemy(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+
+        self.image = pg.image.load("./Images/gorilla.png")
+        self.rect = self.image.get_rect()
+
+        self.rect.x = ran.choice
+    
 
 def start():
     """Environment Setup and Game Loop"""
