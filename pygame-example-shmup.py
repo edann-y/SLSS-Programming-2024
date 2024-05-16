@@ -59,7 +59,8 @@ class Enemy(pg.sprite.Sprite):
         self.image = pg.image.load("./Images/gorilla.png")
         self.rect = self.image.get_rect()
 
-        self.rect.x = ran.choice
+        self.rect.x = ran.randrange(0, WIDTH - self.rect.width)
+        self.rect.y = 0
     
 
 def start():
@@ -75,11 +76,15 @@ def start():
 
     # Variables not groups
     player = Player()
+    
+    enemies = Enemy()
 
     # All sprites go in this sprite Group
     all_sprites = pg.sprite.Group()
 
     all_sprites.add(player)
+
+    all_sprites.add(enemies)
 
     pg.display.set_caption("Shoot Em' Up")
 
