@@ -49,9 +49,7 @@ class Bullet(pg.sprite.Sprite):
     def update(self):
         self.rect.y += self.vel_y
         
-
 # Make Enemies
-
 class Enemy(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -61,6 +59,26 @@ class Enemy(pg.sprite.Sprite):
 
         self.rect.x = ran.randrange(0, WIDTH - self.rect.width)
         self.rect.y = 0
+
+        self.vel_x = ran.choice([-6, -5, -4, -3, 3, 4, 5, 6])
+        self.vel_y = 2
+
+    
+    def update(self):
+        # Update the location of the DVD logo
+        self.rect.x += self.vel_x
+        self.rect.y += self.vel_y
+
+        # Bounce if reaches bottom
+        # if the bottom of the sprite is past the bottom of screen
+        # convert to negative (*-1)
+    
+        if self.rect.left < 0:
+            self.vel_x *= -1
+
+        # Right
+        if self.rect.right > WIDTH:
+            self.vel_x *= -   1
     
 
 def start():
@@ -68,6 +86,8 @@ def start():
 
     pg.init()
     pg.mouse.set_visible(False)
+
+    score = 0
 
     # --Game State Variables--
     screen = pg.display.set_mode(SCREEN_SIZE)
