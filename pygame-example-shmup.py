@@ -48,6 +48,9 @@ class Bullet(pg.sprite.Sprite):
 
     def update(self):
         self.rect.y += self.vel_y
+
+        if self.rect.top < 0:
+            self.kill()
         
 # Make Enemies
 class Enemy(pg.sprite.Sprite):
@@ -82,12 +85,11 @@ class Enemy(pg.sprite.Sprite):
     
 
 def start():
-    """Environment Setup and Game Loop"""
-
     pg.init()
     pg.mouse.set_visible(False)
 
     score = 0
+    life = 5
 
     # --Game State Variables--
     screen = pg.display.set_mode(SCREEN_SIZE)
@@ -96,15 +98,17 @@ def start():
 
     # Variables not groups
     player = Player()
-    
-    enemies = Enemy()
-
-    # All sprites go in this sprite Group
     all_sprites = pg.sprite.Group()
+    enemy_sprite = pg.sprite.Group()
+    bullet_sprite = pg.sprite.Group()
 
     all_sprites.add(player)
 
-    all_sprites.add(enemies)
+    # Create enemies
+    for _ in range(1):
+        enemy = Enemy()
+        all_sprites.add(enemy)
+        enemy_sprite.add(enemy)
 
     pg.display.set_caption("Shoot Em' Up")
 
@@ -115,15 +119,35 @@ def start():
             if event.type == pg.QUIT:
                 done = True
             if event.type == pg.MOUSEBUTTONDOWN:
-                all_sprites.add(Bullet((player.rect.centerx, player.rect.top)))
+                bullet = Bullet((player.rect.centerx, player.rect.top))
+                all_sprites.add(bullet)
+                bullet_sprite.add(bullet)
 
+        # --- Collision Detection ---
+        # Check for collisions between bullets and enemies
+        hits = pg.sprite.groupcollide(bullet_sprite, enemy_sprite, True, True)
+        for hit in hits:
+            # Increase score or do other actions when a hit occurs
+            score += 1
+
+            # Create a new enemy after one is destroyed
+            enemy = Enemy()
+            all_sprites.add(enemy)
+            enemy_sprite.add(enemy)
+
+        enemycollision = pg.sprite.spritecollide(player, enemy_sprite, False)
+
+        for enemy in enemycollision:
+            life -= (1 / 60)
+
+        if life < 0:
+            pg.quit()
 
         # --- Update the world state
         all_sprites.update()
 
         # --- Draw items
         screen.fill(BLACK)
-
         all_sprites.draw(screen)
         # Update the screen with anything new
         pg.display.flip()
